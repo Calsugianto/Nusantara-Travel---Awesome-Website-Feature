@@ -9,7 +9,7 @@
 ## Verifying the database
 `node database/display.js` prints every row in `destinations` and
 `enquiries` to the console — run it before and after submitting the
-Contact Us form for a before/after screenshot.
+Contact Us form.
 
 ## Task 10.3HD — Live Travel Package Preference Visualiser
 - Range sliders (trip duration, budget) and selects (travel style,
