@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nusantara Travel | Home</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<header>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ <div class="container-fluid">
+ <a class="navbar-brand" href="index.html">Nusantara Travel</a>
+ <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+ <span class="navbar-toggler-icon"></span>
+ </button>
+ <div class="collapse navbar-collapse" id="navMenu">
+ <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+ <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+ <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+ <li class="nav-item"><a class="nav-link" href="destinations.html">Destinations</a></li>
+ <li class="nav-item"><a class="nav-link" href="packages.html">Packages</a></li>
+ <li class="nav-item"><a class="nav-link" href="plan.html">Plan Your Trip</a></li>
+ <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+ </ul>
+ <form class="d-flex" role="search" action="search.html" method="get">
+ <label for="navSearch" class="visually-hidden">Search destinations or packages</label>
+ <input class="form-control me-2" type="search" id="navSearch" name="q" placeholder="Search destinations or packages">
+ <button class="btn btn-outline-light" type="submit">Search</button>
+ </form>
+ </div>
+ </div>
+ </nav>
+</header>
+
+<section class="hero-section text-center py-5">
+ <div class="container">
+ <h1 class="display-5">Discover Indonesia with Nusantara Travel</h1>
+ <p class="lead">Tailor-made tours across the archipelago &mdash; beaches, temples, volcanoes and reefs, planned by people who know the islands.</p>
+ <img src="https://loremflickr.com/900/350/indonesia,islands?lock=1" class="img-fluid rounded mt-3" alt="Aerial view of an Indonesian island coastline">
+ </div>
+</section>
+
+<main class="container my-5">
+ <section class="mb-5">
+ <p id="greetingBanner" class="alert alert-light border" role="status">Welcome</p>
+ <h2>Welcome</h2>
+ <p>
+ Nusantara Travel is an online travel agency specialising in trips across Indonesia.
+ We handle flights, accommodation, and guided tours so you can focus on the experience.
+ Browse our destinations and packages below, or use the search bar above to find something specific.
+ </p>
+ </section>
+
+ <section class="row g-4 mb-5">
+ <div class="col-md-4">
+ <div class="card h-100">
+ <img src="https://loremflickr.com/400/220/labuanbajo,flores?lock=2" class="card-img-top" alt="Coastline near Labuan Bajo, Flores">
+ <div class="card-body">
+ <h5 class="card-title">Latest news</h5>
+ <p class="card-text">New direct flight routes to Labuan Bajo starting next season, cutting travel time from Jakarta by nearly two hours.</p>
+ </div>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="card h-100">
+ <img src="https://loremflickr.com/400/220/bali,ricefield?lock=3" class="card-img-top" alt="Featured destination photo of Bali rice terraces">
+ <div class="card-body">
+ <h5 class="card-title">Featured destination</h5>
+ <p class="card-text">Bali &amp; Lombok &mdash; beaches, rice terraces, and island-hopping.</p>
+ <a href="destinations.html" class="btn btn-sm btn-primary">View destinations</a>
+ </div>
+ </div>
+ </div>
+ <div class="col-md-4">
+ <div class="card h-100">
+ <img src="https://loremflickr.com/400/220/borobudur,temple?lock=4" class="card-img-top" alt="Featured package photo of a Yogyakarta temple">
+ <div class="card-body">
+ <h5 class="card-title">Featured package</h5>
+ <p class="card-text">7-day Java &amp; Yogyakarta cultural tour, from $650 per person.</p>
+ <a href="packages.html" class="btn btn-sm btn-primary">View packages</a>
+ </div>
+ </div>
+ </div>
+ </section>
+</main>
+
+<footer class="bg-dark text-white text-center py-4">
+ <div class="container">
+ <p class="mb-1">&copy; 2026 Nusantara Travel</p>
+ <p class="mb-1 small">Contact: info@nusantaratravel.com | +62 21 5550 1234</p>
+ <p class="mb-0 footer-meta" id="lastUpdated">Page last updated: —</p>
+ </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

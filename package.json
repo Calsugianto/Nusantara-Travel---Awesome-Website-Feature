@@ -1,0 +1,16 @@
+{
+  "name": "nusantara-travel",
+  "version": "3.2.0",
+  "description": "Nusantara Travel - SIT774 Task 10.2 (Database Integration)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "db:create": "node database/create.js",
+    "db:seed": "node database/seed.js",
+    "db:display": "node database/display.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}
