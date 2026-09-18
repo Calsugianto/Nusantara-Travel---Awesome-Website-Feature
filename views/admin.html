@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nusantara Travel | Admin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<header>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ <div class="container-fluid">
+ <a class="navbar-brand" href="/index.html">Nusantara Travel</a>
+ <span class="navbar-text text-white ms-auto me-3">Signed in as <strong id="adminUsername">admin</strong></span>
+ <button type="button" id="logoutBtn" class="btn btn-outline-light btn-sm">Log out</button>
+ </div>
+ </nav>
+</header>
+
+<main class="container my-5">
+ <h1>Admin dashboard</h1>
+ <p class="lead">Add, edit or delete destinations and packages, and manage incoming enquiries.</p>
+
+ <!-- Shared notification banner, used by every form/action on this page -->
+ <div id="notification" class="alert d-none" role="status"></div>
+
+ <ul class="nav nav-tabs mb-4" id="adminTabs">
+   <li class="nav-item"><button class="nav-link active" data-tab="destinations">Destinations</button></li>
+   <li class="nav-item"><button class="nav-link" data-tab="packages">Packages</button></li>
+   <li class="nav-item"><button class="nav-link" data-tab="enquiries">Enquiries</button></li>
+ </ul>
+
+ <!-- ============ Destinations tab ============ -->
+ <section id="tab-destinations" class="admin-tab">
+   <div class="row g-4">
+     <div class="col-lg-5">
+       <div class="card">
+         <div class="card-body">
+           <h2 class="h5" id="destinationFormTitle">Add a destination</h2>
+           <form id="destinationForm" novalidate>
+             <input type="hidden" id="destinationId">
+             <div class="mb-2">
+               <label class="form-label" for="destinationName">Name <span class="text-danger">*</span></label>
+               <input type="text" class="form-control" id="destinationName" required>
+               <div class="invalid-feedback-text text-danger small" id="destinationNameError"></div>
+             </div>
+             <div class="mb-2">
+               <label class="form-label" for="destinationCategory">Category <span class="text-danger">*</span></label>
+               <input type="text" class="form-control" id="destinationCategory" placeholder="e.g. Beach & nature" required>
+               <div class="invalid-feedback-text text-danger small" id="destinationCategoryError"></div>
+             </div>
+             <div class="mb-2">
+               <label class="form-label" for="destinationDescription">Description <span class="text-danger">*</span></label>
+               <textarea class="form-control" id="destinationDescription" rows="3" required></textarea>
+               <div class="invalid-feedback-text text-danger small" id="destinationDescriptionError"></div>
+             </div>
+             <div class="mb-3">
+               <label class="form-label" for="destinationImageUrl">Image URL <span class="text-danger">*</span></label>
+               <input type="url" class="form-control" id="destinationImageUrl" placeholder="https://..." required>
+               <div class="invalid-feedback-text text-danger small" id="destinationImageUrlError"></div>
+             </div>
+             <button type="submit" class="btn btn-primary" id="destinationSubmitBtn">Add destination</button>
+             <button type="button" class="btn btn-outline-secondary d-none" id="destinationCancelBtn">Cancel edit</button>
+           </form>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-lg-7">
+       <div class="mb-2 d-flex gap-2">
+         <input type="search" class="form-control" id="destinationSearch" placeholder="Search destinations...">
+       </div>
+       <table class="table table-sm align-middle">
+         <thead><tr><th>Name</th><th>Category</th><th></th></tr></thead>
+         <tbody id="destinationsTableBody"></tbody>
+       </table>
+     </div>
+   </div>
+ </section>
+
+ <!-- ============ Packages tab ============ -->
+ <section id="tab-packages" class="admin-tab d-none">
+   <div class="row g-4">
+     <div class="col-lg-5">
+       <div class="card">
+         <div class="card-body">
+           <h2 class="h5" id="packageFormTitle">Add a package</h2>
+           <form id="packageForm" novalidate>
+             <input type="hidden" id="packageId">
+             <div class="mb-2">
+               <label class="form-label" for="packageName">Name <span class="text-danger">*</span></label>
+               <input type="text" class="form-control" id="packageName" required>
+               <div class="invalid-feedback-text text-danger small" id="packageNameError"></div>
+             </div>
+             <div class="mb-2">
+               <label class="form-label" for="packageType">Type <span class="text-danger">*</span></label>
+               <select class="form-select" id="packageType" required>
+                 <option value="beach">Beach</option>
+                 <option value="adventure">Adventure</option>
+                 <option value="culture">Culture</option>
+                 <option value="nature">Nature</option>
+               </select>
+             </div>
+             <div class="row g-2 mb-2">
+               <div class="col">
+                 <label class="form-label" for="packagePrice">Price from (AUD) <span class="text-danger">*</span></label>
+                 <input type="number" min="0" class="form-control" id="packagePrice" required>
+                 <div class="invalid-feedback-text text-danger small" id="packagePriceError"></div>
+               </div>
+               <div class="col">
+                 <label class="form-label" for="packageDuration">Duration (days) <span class="text-danger">*</span></label>
+                 <input type="number" min="1" class="form-control" id="packageDuration" required>
+                 <div class="invalid-feedback-text text-danger small" id="packageDurationError"></div>
+               </div>
+             </div>
+             <div class="mb-2">
+               <label class="form-label" for="packageDescription">Description <span class="text-danger">*</span></label>
+               <textarea class="form-control" id="packageDescription" rows="3" required></textarea>
+               <div class="invalid-feedback-text text-danger small" id="packageDescriptionError"></div>
+             </div>
+             <div class="mb-3">
+               <label class="form-label" for="packageImageUrl">Image URL <span class="text-danger">*</span></label>
+               <input type="url" class="form-control" id="packageImageUrl" placeholder="https://..." required>
+               <div class="invalid-feedback-text text-danger small" id="packageImageUrlError"></div>
+             </div>
+             <button type="submit" class="btn btn-primary" id="packageSubmitBtn">Add package</button>
+             <button type="button" class="btn btn-outline-secondary d-none" id="packageCancelBtn">Cancel edit</button>
+           </form>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-lg-7">
+       <div class="mb-2 d-flex gap-2">
+         <input type="search" class="form-control" id="packageSearch" placeholder="Search packages...">
+         <select class="form-select" id="packageSort" style="max-width: 180px;">
+           <option value="">Sort: default</option>
+           <option value="price_asc">Price: low to high</option>
+           <option value="price_desc">Price: high to low</option>
+           <option value="newest">Newest first</option>
+         </select>
+       </div>
+       <table class="table table-sm align-middle">
+         <thead><tr><th>Name</th><th>Type</th><th>Price</th><th></th></tr></thead>
+         <tbody id="packagesTableBody"></tbody>
+       </table>
+       <nav id="packagesPagination" class="pagination-controls"></nav>
+     </div>
+   </div>
+ </section>
+
+ <!-- ============ Enquiries tab ============ -->
+ <section id="tab-enquiries" class="admin-tab d-none">
+   <div class="mb-2 d-flex gap-2 flex-wrap">
+     <input type="search" class="form-control" id="enquirySearch" placeholder="Search enquiries..." style="max-width: 260px;">
+     <select class="form-select" id="enquiryStatusFilter" style="max-width: 160px;">
+       <option value="all">All statuses</option>
+       <option value="pending">Pending</option>
+       <option value="responded">Responded</option>
+     </select>
+     <select class="form-select" id="enquirySort" style="max-width: 160px;">
+       <option value="newest">Newest first</option>
+       <option value="oldest">Oldest first</option>
+     </select>
+   </div>
+   <table class="table table-sm align-middle">
+     <thead><tr><th>Name</th><th>Email</th><th>Message</th><th>Destination</th><th>Status</th><th></th></tr></thead>
+     <tbody id="enquiriesTableBody"></tbody>
+   </table>
+   <nav id="enquiriesPagination" class="pagination-controls"></nav>
+ </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
