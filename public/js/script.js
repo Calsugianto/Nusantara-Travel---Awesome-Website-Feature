@@ -2,11 +2,45 @@ document.addEventListener("DOMContentLoaded", function () {
   setActiveNavLink();
   setFooterLastUpdated();
   setHomeGreeting();
-  loadDestinations();          // NEW for 10.2P — was initDestinationFilter() reading static HTML
-  initPackageFilter();         // unchanged from Task 7.2D — packages.html is still static
+  updateNavAuthState();        // NEW for 10.2D v2 — shows Log in / Admin+Log out depending on session
+  loadDestinations();          // UPDATED for 10.2D v2 — now also supports ?search=
+  loadPackages();              // UPDATED for 10.2D v2 — packages.html is now database-driven too
   initSearchResults();         // unchanged from Task 7.2D — search.html is still static
   initContactFormValidation(); // UPDATED for 10.2P — now also POSTs to the database
 });
+
+/* --------------------------------------------------------------------
+   0. NEW for 10.2D v2 — Nav auth state.
+   Checks GET /api/session on every page load and swaps the "Log in"
+   nav item for "Admin" + "Log out" when an admin is signed in, so the
+   nav reflects who's logged in without needing a full page template
+   system.
+-------------------------------------------------------------------- */
+async function updateNavAuthState() {
+  const authNavItem = document.getElementById("authNavItem");
+  if (!authNavItem) return;
+
+  try {
+    const response = await fetch("/api/session");
+    const data = await response.json();
+
+    if (data.user) {
+      authNavItem.innerHTML = `
+        <a class="nav-link" href="/admin">Admin</a>
+      `;
+      const logoutItem = document.createElement("li");
+      logoutItem.className = "nav-item";
+      logoutItem.innerHTML = `<button type="button" class="nav-link btn btn-link" id="navLogoutBtn">Log out</button>`;
+      authNavItem.after(logoutItem);
+      document.getElementById("navLogoutBtn").addEventListener("click", async () => {
+        await fetch("/api/logout", { method: "POST" });
+        window.location.href = "index.html";
+      });
+    }
+  } catch (err) {
+    console.error("Could not check login status:", err);
+  }
+}
 
 /* --------------------------------------------------------------------
    1. Highlight the current page in the nav automatically.
@@ -70,16 +104,26 @@ const BADGE_CLASS = {
   "Adventure": "badge-adventure"
 };
 
+/** Escapes HTML special characters before inserting admin-entered text
+ *  (destination/package name, category, description) into innerHTML —
+ *  defence-in-depth alongside the server-side validation, so a stray
+ *  "<" or "&" in a title never breaks the markup or executes as HTML. */
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text == null ? "" : String(text);
+  return div.innerHTML;
+}
+
 function renderDestinationCard(destination) {
   const badgeClass = BADGE_CLASS[destination.category] || "badge-beach";
   return `
     <div class="col-md-4">
       <div class="card h-100" data-region="${destination.slug}">
-        <img src="${destination.image_url}" class="card-img-top" alt="${destination.name}">
+        <img src="${escapeHtml(destination.image_url)}" class="card-img-top" alt="${escapeHtml(destination.name)}">
         <div class="card-body">
-          <span class="badge ${badgeClass} mb-2">${destination.category}</span>
-          <h5 class="card-title">${destination.name}</h5>
-          <p class="card-text">${destination.description}</p>
+          <span class="badge ${badgeClass} mb-2">${escapeHtml(destination.category)}</span>
+          <h5 class="card-title">${escapeHtml(destination.name)}</h5>
+          <p class="card-text">${escapeHtml(destination.description)}</p>
           <a href="packages.html" class="btn btn-sm btn-primary">See packages</a>
         </div>
       </div>
@@ -95,16 +139,18 @@ async function loadDestinations(region) {
   status.classList.remove("d-none", "text-danger");
 
   try {
-    const url = region && region !== "all"
-      ? `/api/destinations?region=${encodeURIComponent(region)}`
-      : "/api/destinations";
-    const response = await fetch(url);
+    const searchInput = document.getElementById("destinationSearchInput");
+    const params = new URLSearchParams();
+    if (region && region !== "all") params.set("region", region);
+    if (searchInput && searchInput.value.trim()) params.set("search", searchInput.value.trim());
+
+    const response = await fetch(`/api/destinations?${params}`);
     if (!response.ok) throw new Error(`Server responded with ${response.status}`);
     const data = await response.json();
 
     if (!data.destinations || data.destinations.length === 0) {
       list.innerHTML = "";
-      status.textContent = "No destinations matched that region.";
+      status.textContent = "No destinations matched your filter.";
       return;
     }
 
@@ -120,6 +166,7 @@ async function loadDestinations(region) {
 function initDestinationFilterButton() {
   const select = document.getElementById("regionFilter");
   const button = document.getElementById("regionFilterBtn");
+  const searchInput = document.getElementById("destinationSearchInput");
   if (!select) return;
 
   function applyFilter() {
@@ -127,34 +174,121 @@ function initDestinationFilterButton() {
   }
   if (button) button.addEventListener("click", applyFilter);
   select.addEventListener("change", applyFilter);
+  if (searchInput) searchInput.addEventListener("input", applyFilter);
 }
 // Wire up the filter as soon as the destinations page's elements exist.
 if (document.getElementById("regionFilter")) initDestinationFilterButton();
 
 /* --------------------------------------------------------------------
-   5. Packages page: unchanged from Task 7.2D — still a client-side
-   filter over the static cards (not part of the database scope for
-   this task, which asked for "one or two straightforward tables").
+   5. UPDATED for 10.2D v2 — Packages page.
+   packages.html no longer has hard-coded cards; every package now
+   comes from GET /api/packages, which supports ?type, ?search, ?sort
+   and ?page/?pageSize (used for the pagination controls below).
 -------------------------------------------------------------------- */
-function initPackageFilter() {
-  const select = document.getElementById("typeFilter");
-  const button = document.getElementById("typeFilterBtn");
-  const cards = document.querySelectorAll("[data-type]");
-  if (!select || !cards.length) return;
+let packagesCurrentPage = 1;
 
-  function applyFilter() {
-    const chosen = select.value;
-    cards.forEach((card) => {
-      const show = chosen === "all" || card.dataset.type === chosen;
-      const col = card.closest("[class*='col-']") || card;
-      col.classList.toggle("d-none", !show);
-    });
-  }
-
-  if (button) button.addEventListener("click", applyFilter);
-  select.addEventListener("change", applyFilter);
-  applyFilter();
+function renderPackageCard(pkg) {
+  const badgeClass = BADGE_CLASS[pkg.type.charAt(0).toUpperCase() + pkg.type.slice(1)] || `badge-${pkg.type}`;
+  return `
+    <div class="col-md-4">
+      <div class="card h-100" data-type="${pkg.type}">
+        <img src="${escapeHtml(pkg.image_url)}" class="card-img-top" alt="${escapeHtml(pkg.name)}">
+        <div class="card-body">
+          <span class="badge ${badgeClass} mb-2">${escapeHtml(pkg.type.charAt(0).toUpperCase() + pkg.type.slice(1))}</span>
+          <h5 class="card-title">${escapeHtml(pkg.name)}, ${pkg.duration_days} day${pkg.duration_days > 1 ? "s" : ""}</h5>
+          <p class="card-text">From $${pkg.price_from} per person. ${escapeHtml(pkg.description)}</p>
+          <button type="button" class="btn btn-sm btn-outline-primary me-1" data-view-package="${pkg.id}">View details</button>
+          <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
+        </div>
+      </div>
+    </div>`;
 }
+
+function renderPublicPagination(containerId, currentPage, totalPages, onPageChange) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (totalPages <= 1) { container.innerHTML = ""; return; }
+
+  let html = `<ul class="pagination">`;
+  for (let page = 1; page <= totalPages; page++) {
+    html += `<li class="page-item ${page === currentPage ? "active" : ""}">
+      <button type="button" class="page-link" data-page="${page}">${page}</button>
+    </li>`;
+  }
+  html += `</ul>`;
+  container.innerHTML = html;
+  container.querySelectorAll("[data-page]").forEach((btn) => {
+    btn.addEventListener("click", () => onPageChange(Number(btn.dataset.page)));
+  });
+}
+
+async function loadPackages(page) {
+  const list = document.getElementById("packagesList");
+  const status = document.getElementById("packagesStatus");
+  if (!list) return; // not on the packages page
+
+  if (page) packagesCurrentPage = page;
+  status.textContent = "Loading packages…";
+  status.classList.remove("d-none", "text-danger");
+
+  try {
+    const type = document.getElementById("typeFilter")?.value || "all";
+    const search = document.getElementById("packageSearchInput")?.value.trim() || "";
+    const sort = document.getElementById("packageSortSelect")?.value || "";
+
+    const params = new URLSearchParams({ page: packagesCurrentPage, pageSize: 6 });
+    if (type !== "all") params.set("type", type);
+    if (search) params.set("search", search);
+    if (sort) params.set("sort", sort);
+
+    const response = await fetch(`/api/packages?${params}`);
+    if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+    const data = await response.json();
+
+    if (!data.packages || data.packages.length === 0) {
+      list.innerHTML = "";
+      status.textContent = "No packages matched your filter.";
+      renderPublicPagination("packagesPagination", 1, 1, () => {});
+      return;
+    }
+
+    list.innerHTML = data.packages.map(renderPackageCard).join("");
+    list.dataset.records = JSON.stringify(data.packages);
+    status.classList.add("d-none");
+    renderPublicPagination("packagesPagination", data.page, data.totalPages, (newPage) => loadPackages(newPage));
+  } catch (err) {
+    console.error(err);
+    status.textContent = "Could not load packages from the database. Is the server running?";
+    status.classList.add("text-danger");
+  }
+}
+
+function initPackageControls() {
+  const typeFilter = document.getElementById("typeFilter");
+  const searchInput = document.getElementById("packageSearchInput");
+  const sortSelect = document.getElementById("packageSortSelect");
+  if (!typeFilter) return;
+
+  function applyFilter() { packagesCurrentPage = 1; loadPackages(); }
+  typeFilter.addEventListener("change", applyFilter);
+  if (searchInput) searchInput.addEventListener("input", applyFilter);
+  if (sortSelect) sortSelect.addEventListener("change", applyFilter);
+
+  // "View details" opens the shared modal with that package's full description.
+  document.getElementById("packagesList").addEventListener("click", (event) => {
+    const id = event.target.dataset.viewPackage;
+    if (!id) return;
+    const records = JSON.parse(document.getElementById("packagesList").dataset.records || "[]");
+    const pkg = records.find((r) => String(r.id) === id);
+    if (!pkg) return;
+
+    document.getElementById("packageDetailModalLabel").textContent = `${pkg.name}, ${pkg.duration_days} days`;
+    document.getElementById("packageDetailModalBody").innerHTML =
+      `<p><strong>From $${pkg.price_from} per person.</strong> ${escapeHtml(pkg.description)}</p>`;
+    new bootstrap.Modal(document.getElementById("packageDetailModal")).show();
+  });
+}
+if (document.getElementById("typeFilter")) initPackageControls();
 
 /* --------------------------------------------------------------------
    6. Search results page: unchanged from Task 7.2D — reads the ?q=

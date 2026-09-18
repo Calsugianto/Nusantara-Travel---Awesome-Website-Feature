@@ -1,12 +1,10 @@
 /* ----------------------------------------------------------------------
    display.js
-   Task 10.2P — Database Integration
+   Task 10.2D — Database Integration (v2)
 
-   A small read-only reporting script: prints every row currently in
-   destinations and enquiries to the console. Used to take "before" and
-   "after" screenshots of the database contents (e.g. run once before
-   submitting the Contact Us form on the site, and once after, to show
-   the new enquiry row landing in the table).
+   Prints every row currently in users (username/role only — never the
+   password hash), destinations, packages and enquiries. Used for
+   before/after screenshots of database contents.
 
    Run with:  node database/display.js   (or  npm run db:display)
 ------------------------------------------------------------------------- */
@@ -32,17 +30,16 @@ function printTable(title, rows) {
 
   const db = openDb();
 
-  const destinations = await all(db, "SELECT * FROM destinations ORDER BY id");
-  printTable("destinations", destinations);
-
-  const enquiries = await all(db, `
-    SELECT enquiries.id, enquiries.name, enquiries.email, enquiries.phone,
-           enquiries.message, destinations.name AS destination, enquiries.created_at
+  printTable("users", await all(db, "SELECT id, username, email, role, created_at FROM users ORDER BY id"));
+  printTable("destinations", await all(db, "SELECT * FROM destinations ORDER BY id"));
+  printTable("packages", await all(db, "SELECT * FROM packages ORDER BY id"));
+  printTable("enquiries", await all(db, `
+    SELECT enquiries.id, enquiries.name, enquiries.email, enquiries.phone, enquiries.status,
+           destinations.name AS destination, enquiries.created_at
     FROM enquiries
     LEFT JOIN destinations ON destinations.id = enquiries.destination_id
     ORDER BY enquiries.id
-  `);
-  printTable("enquiries", enquiries);
+  `));
 
   await close(db);
 })();

@@ -192,3 +192,12 @@ img { max-width: 100%; height: auto; }
 .trip-planner output {
   font-variant-numeric: tabular-nums;
 }
+
+/* ----------------------------------------------------------------------
+   Task 10.2D v2 — Admin dashboard, auth, pagination
+------------------------------------------------------------------------- */
+.pagination-controls .pagination { margin-bottom: 0; }
+.admin-tab .card { border: none; box-shadow: 0 .15rem .5rem rgba(11, 79, 92, .08); }
+.nav-tabs .nav-link.active { color: var(--nt-teal); font-weight: 600; border-color: #dee2e6 #dee2e6 #fff; }
+#authNavItem .btn-link, #navLogoutBtn { color: rgba(255,255,255,.85); text-decoration: none; padding: .5rem 1rem; }
+#authNavItem .btn-link:hover, #navLogoutBtn:hover { color: #fff; text-decoration: underline; }

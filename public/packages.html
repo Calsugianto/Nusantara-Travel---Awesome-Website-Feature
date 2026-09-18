@@ -23,6 +23,7 @@
  <li class="nav-item"><a class="nav-link" href="packages.html">Packages</a></li>
  <li class="nav-item"><a class="nav-link" href="plan.html">Plan Your Trip</a></li>
  <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+ <li class="nav-item" id="authNavItem"><a class="nav-link" href="login.html">Log in</a></li>
  </ul>
  <form class="d-flex" role="search" action="search.html" method="get">
  <label for="navSearch" class="visually-hidden">Search destinations or packages</label>
@@ -36,207 +37,49 @@
 
 <main class="container my-5">
  <h1>Tour packages</h1>
- <p class="lead">Ten fixed-itinerary packages across the archipelago, or contact us to build a custom trip.</p>
+ <p class="lead">Fixed-itinerary packages across the archipelago, or contact us to build a custom trip.</p>
 
  <form class="row row-cols-lg-auto g-2 align-items-center mb-4" onsubmit="return false;">
- <div class="col-12">
- <label class="visually-hidden" for="typeFilter">Package type</label>
- <select class="form-select" id="typeFilter">
- <option value="all" selected>All types</option>
- <option value="beach">Beach</option>
- <option value="adventure">Adventure</option>
- <option value="culture">Culture</option>
- <option value="nature">Nature</option>
- </select>
- </div>
- <div class="col-12">
- <button type="button" id="typeFilterBtn" class="btn btn-outline-secondary">Filter</button>
- </div>
+   <div class="col-12">
+     <label class="visually-hidden" for="typeFilter">Package type</label>
+     <select class="form-select" id="typeFilter">
+       <option value="all" selected>All types</option>
+       <option value="beach">Beach</option>
+       <option value="adventure">Adventure</option>
+       <option value="culture">Culture</option>
+       <option value="nature">Nature</option>
+     </select>
+   </div>
+   <div class="col-12">
+     <input type="search" class="form-control" id="packageSearchInput" placeholder="Search packages...">
+   </div>
+   <div class="col-12">
+     <label class="visually-hidden" for="packageSortSelect">Sort</label>
+     <select class="form-select" id="packageSortSelect">
+       <option value="">Sort: default</option>
+       <option value="price_asc">Price: low to high</option>
+       <option value="price_desc">Price: high to low</option>
+       <option value="newest">Newest first</option>
+     </select>
+   </div>
  </form>
 
- <section class="row g-4">
- <div class="col-md-4"><div class="card h-100" data-type="beach">
- <img src="https://loremflickr.com/400/240/bali,beach?lock=21" class="card-img-top" alt="Beach in the Gili Islands">
- <div class="card-body">
- <span class="badge badge-beach mb-2">Beach</span>
- <h5 class="card-title">Bali &amp; Gili Islands, 6 days</h5>
- <p class="card-text">From $520 per person. Flights, hotel, and one boat day trip included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgBaliModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="adventure">
- <img src="https://loremflickr.com/400/240/bromo,volcano?lock=22" class="card-img-top" alt="Mount Bromo volcano at sunrise">
- <div class="card-body">
- <span class="badge badge-adventure mb-2">Adventure</span>
- <h5 class="card-title">Bromo &amp; Ijen trekking, 4 days</h5>
- <p class="card-text">From $380 per person. Guide, permits, and transport included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgBromoModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="culture">
- <img src="https://loremflickr.com/400/240/borobudur,yogyakarta?lock=23" class="card-img-top" alt="Borobudur temple">
- <div class="card-body">
- <span class="badge badge-culture mb-2">Culture</span>
- <h5 class="card-title">Java &amp; Yogyakarta culture, 7 days</h5>
- <p class="card-text">From $650 per person. Borobudur, Prambanan, and a batik workshop included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgJavaModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="beach">
- <img src="https://loremflickr.com/400/240/nusapenida,cliff?lock=24" class="card-img-top" alt="Cliffs at Nusa Penida">
- <div class="card-body">
- <span class="badge badge-beach mb-2">Beach</span>
- <h5 class="card-title">Nusa Penida day trip, 1 day</h5>
- <p class="card-text">From $95 per person. Fast-boat transfer, cliff viewpoints, and snorkelling included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgPenidaModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="adventure">
- <img src="https://loremflickr.com/400/240/rinjani,lombok?lock=25" class="card-img-top" alt="Mount Rinjani crater rim">
- <div class="card-body">
- <span class="badge badge-adventure mb-2">Adventure</span>
- <h5 class="card-title">Mount Rinjani trek, Lombok, 3 days</h5>
- <p class="card-text">From $410 per person. Crater-rim camping and guided summit push included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgRinjaniModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="adventure">
- <img src="https://loremflickr.com/400/240/komodo,dragon?lock=26" class="card-img-top" alt="Komodo dragon on Komodo Island">
- <div class="card-body">
- <span class="badge badge-adventure mb-2">Adventure</span>
- <h5 class="card-title">Komodo &amp; Labuan Bajo, 4 days</h5>
- <p class="card-text">From $560 per person. Komodo dragon trek and Pink Beach snorkelling included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgKomodoModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="culture">
- <img src="https://loremflickr.com/400/240/laketoba,samosir?lock=27" class="card-img-top" alt="Samosir Island on Lake Toba">
- <div class="card-body">
- <span class="badge badge-culture mb-2">Culture</span>
- <h5 class="card-title">Lake Toba &amp; Samosir Island, 5 days</h5>
- <p class="card-text">From $470 per person. Batak villages, traditional houses, and lake-view stays included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgTobaModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="nature">
- <img src="https://loremflickr.com/400/240/orangutan,sumatra?lock=28" class="card-img-top" alt="Orangutan in a Sumatran rainforest">
- <div class="card-body">
- <span class="badge badge-nature mb-2">Nature</span>
- <h5 class="card-title">Bukit Lawang orangutan trek, Sumatera, 3 days</h5>
- <p class="card-text">From $340 per person. Guided rainforest trek to see wild orangutans included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgLawangModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="nature">
- <img src="https://loremflickr.com/400/240/borneo,river?lock=29" class="card-img-top" alt="River cruise boat in Kalimantan">
- <div class="card-body">
- <span class="badge badge-nature mb-2">Nature</span>
- <h5 class="card-title">Tanjung Puting river cruise, Kalimantan, 4 days</h5>
- <p class="card-text">From $590 per person. Klotok houseboat cruise through the orangutan reserve included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgPutingModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
-
- <div class="col-md-4"><div class="card h-100" data-type="culture">
- <img src="https://loremflickr.com/400/240/dayak,longhouse?lock=30" class="card-img-top" alt="Traditional Dayak longhouse in Kalimantan">
- <div class="card-body">
- <span class="badge badge-culture mb-2">Culture</span>
- <h5 class="card-title">Kalimantan river &amp; longhouse culture, 5 days</h5>
- <p class="card-text">From $530 per person. Dayak longhouse stay and traditional river travel included.</p>
- <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#pkgDayakModal">View details</button>
- <a href="contact.html" class="btn btn-sm btn-primary">Enquire</a>
- </div></div></div>
- </section>
+ <p id="packagesStatus" class="text-muted">Loading packages…</p>
+ <section class="row g-4" id="packagesList"></section>
+ <nav id="packagesPagination" class="pagination-controls mt-3"></nav>
 </main>
 
-<!-- Detail modals (unchanged from Task 7.2D) -->
-<div class="modal fade" id="pkgBaliModal" tabindex="-1" aria-labelledby="pkgBaliModalLabel" aria-hidden="true">
+<!-- Package detail modal (single, reused for whichever package was clicked) -->
+<div class="modal fade" id="packageDetailModal" tabindex="-1" aria-labelledby="packageDetailModalLabel" aria-hidden="true">
  <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgBaliModalLabel">Bali &amp; Gili Islands, 6 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $520 per person.</strong> Beach-focused itinerary covering south Bali and the Gili Islands.</p>
- <ul><li>Return airport transfers and a 4-star beachfront hotel</li><li>One full-day boat trip to the Gili Islands, including snorkelling gear</li><li>Daily breakfast included; other meals at your own pace</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgBromoModal" tabindex="-1" aria-labelledby="pkgBromoModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgBromoModalLabel">Bromo &amp; Ijen trekking, 4 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $380 per person.</strong> A guided trekking route across two of East Java's most active volcanic areas.</p>
- <ul><li>Licensed local trekking guide and all entry permits</li><li>4WD transport to the Mount Bromo viewpoint before sunrise</li><li>Overnight trek to see the Ijen blue flame phenomenon</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgJavaModal" tabindex="-1" aria-labelledby="pkgJavaModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgJavaModalLabel">Java &amp; Yogyakarta culture, 7 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $650 per person.</strong> A culture-focused week through Yogyakarta's temples and craft traditions.</p>
- <ul><li>Guided visits to Borobudur and Prambanan at sunrise</li><li>Hands-on batik workshop with a local artisan</li><li>7 nights' accommodation and daily breakfast included</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgPenidaModal" tabindex="-1" aria-labelledby="pkgPenidaModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgPenidaModalLabel">Nusa Penida day trip, 1 day</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $95 per person.</strong> A full-day trip to Bali's dramatic neighbouring island.</p>
- <ul><li>Return fast-boat transfer from Sanur</li><li>Kelingking, Broken Beach and Angel's Billabong viewpoints</li><li>Snorkelling stop with gear included</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgRinjaniModal" tabindex="-1" aria-labelledby="pkgRinjaniModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgRinjaniModalLabel">Mount Rinjani trek, Lombok, 3 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $410 per person.</strong> A guided multi-day trek up Lombok's volcanic peak.</p>
- <ul><li>Licensed mountain guide, porters, and camping gear</li><li>Two nights camping on the crater rim</li><li>All meals during the trek included</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgKomodoModal" tabindex="-1" aria-labelledby="pkgKomodoModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgKomodoModalLabel">Komodo &amp; Labuan Bajo, 4 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $560 per person.</strong> A boat-based trip through Komodo National Park.</p>
- <ul><li>Liveaboard boat with cabin accommodation</li><li>Ranger-guided Komodo dragon trek</li><li>Pink Beach and Manta Point snorkelling stops</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgTobaModal" tabindex="-1" aria-labelledby="pkgTobaModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgTobaModalLabel">Lake Toba &amp; Samosir Island, 5 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $470 per person.</strong> A relaxed cultural trip around Southeast Asia's largest volcanic lake.</p>
- <ul><li>Ferry transfer to Samosir Island</li><li>Visits to traditional Batak stone villages</li><li>Lakeside accommodation with daily breakfast</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgLawangModal" tabindex="-1" aria-labelledby="pkgLawangModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgLawangModalLabel">Bukit Lawang orangutan trek, Sumatera, 3 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $340 per person.</strong> A jungle-trekking trip into Gunung Leuser National Park.</p>
- <ul><li>Licensed rainforest guide for two days of trekking</li><li>High chance of seeing wild orangutans and gibbons</li><li>Riverside eco-lodge accommodation included</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgPutingModal" tabindex="-1" aria-labelledby="pkgPutingModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgPutingModalLabel">Tanjung Puting river cruise, Kalimantan, 4 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $590 per person.</strong> A slow cruise by traditional klotok houseboat through Borneo's rainforest.</p>
- <ul><li>3 nights aboard a klotok houseboat, meals included</li><li>Ranger-guided stops at orangutan feeding stations</li><li>Return flights from Yogyakarta to Pangkalan Bun</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
-
-<div class="modal fade" id="pkgDayakModal" tabindex="-1" aria-labelledby="pkgDayakModalLabel" aria-hidden="true">
- <div class="modal-dialog"><div class="modal-content">
- <div class="modal-header"><h2 class="modal-title h5" id="pkgDayakModalLabel">Kalimantan river &amp; longhouse culture, 5 days</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
- <div class="modal-body"><p><strong>From $530 per person.</strong> A cultural trip up the Kapuas River to traditional Dayak communities.</p>
- <ul><li>Longboat travel along the Kapuas River</li><li>Overnight stay in a traditional Dayak longhouse</li><li>Local guide and community-hosted meals included</li></ul></div>
- <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
- </div></div></div>
+   <div class="modal-header">
+     <h2 class="modal-title h5" id="packageDetailModalLabel"></h2>
+     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   </div>
+   <div class="modal-body" id="packageDetailModalBody"></div>
+   <div class="modal-footer"><a href="contact.html" class="btn btn-primary">Enquire about this package</a></div>
+ </div></div>
+</div>
 
 <footer class="bg-dark text-white text-center py-4">
  <div class="container">
